@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.GyroScopeFragment">
+
+    <LinearLayout
+        android:id="@+id/sensorGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/textX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X: --"
+            android:textSize="22sp"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/textY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Y: --"
+            android:textSize="22sp"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/textZ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Z: --"
+            android:textSize="22sp"
+            android:padding="8dp" />
+    </LinearLayout>
+
+    <include layout="@layout/inside_test_item" android:id="@+id/gyroItem"/>
+
+</FrameLayout>
