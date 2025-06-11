@@ -66,6 +66,12 @@ class MultiCameraFragment : Fragment() {
         textureView1 = binding.textureView1
         textureView2 = binding.textureView2
 
+        binding.btnConfirm.setOnClickListener {
+            (requireActivity() as ActivityTests).alertDialogConfirm("The camera works correctly"
+                ,"The camera doesn't work correctly",requireActivity(),FlashFragment()
+                , { checkAndOpenCamera() } ,"Is the camera image is good", TestFragment.ID_MULTI_CAMERA)
+        }
+
         return binding.root
     }
 
@@ -296,11 +302,7 @@ class MultiCameraFragment : Fragment() {
                 startCameraPreview(multiCamera.toString(), enabledRun = true) {
                         status, _ ->
                     if (status){
-                        Handler().postDelayed(
-                            {(requireActivity() as ActivityTests).alertDialogConfirm("The camera works correctly"
-                                ,"The camera doesn't work correctly",requireActivity(),FlashFragment()
-                                , { checkAndOpenCamera() } ,"Is the camera image is good", TestFragment.ID_MULTI_CAMERA)
-                            },10000)
+                        binding.btnConfirm.visibility = View.VISIBLE
                     }
                         }
             else{

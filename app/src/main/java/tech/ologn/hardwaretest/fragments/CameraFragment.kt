@@ -67,6 +67,12 @@ class CameraFragment : Fragment() {
             }
         }
 
+        binding.btnConfirm.setOnClickListener {
+            (requireActivity() as ActivityTests).alertDialogConfirm("The camera works correctly"
+                ,"The camera doesn't work correctly",requireActivity(), MultiCameraFragment()
+                , { checkAndOpenCamera() } ,"Is the camera image is good", TestFragment.ID_CAMERA)
+        }
+
         return binding.root
     }
 
@@ -131,11 +137,7 @@ class CameraFragment : Fragment() {
                         cameraDevice = camera
                         try {
                             camera.createCaptureSession(listOf(surface1), captureStateCallback, null)
-                            Handler().postDelayed(
-                                {(requireActivity() as ActivityTests).alertDialogConfirm("The camera works correctly"
-                                    ,"The camera doesn't work correctly",requireActivity(), MultiCameraFragment()
-                                    , { checkAndOpenCamera() } ,"Is the camera image is good", TestFragment.ID_CAMERA)
-                                },10000)
+                            binding.btnConfirm.visibility = View.VISIBLE
                         } catch (e: Exception) {
                             showFailDialog()
                             throw RuntimeException(e)

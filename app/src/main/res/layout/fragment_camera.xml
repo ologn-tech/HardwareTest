@@ -13,12 +13,21 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        app:layout_constraintTop_toTopOf="parent"
-       android:orientation="horizontal">
+       android:orientation="vertical">
       <TextureView
           android:id="@+id/textureView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content" />
    </LinearLayout>
+
+   <Button
+       android:id="@+id/btnConfirm"
+       android:visibility="gone"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center|bottom"
+       android:layout_marginBottom="20dp"
+       android:text="Confirm"/>
 
    <!-- FloatingActionButton to switch camera -->
    <com.google.android.material.floatingactionbutton.FloatingActionButton
