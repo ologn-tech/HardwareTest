@@ -20,7 +20,7 @@ class TestFragment : Fragment() {
         val ID_CAMERA = 4
         val ID_MULTI_CAMERA = 5
         val ID_FLASH = 6
-        val ID_HEADPHONE = 7
+        val ID_MICROPHONE = 7
         val ID_SOUND = 8
         val ID_ACCELEROMETER = 9
         val ID_GYROSCOPE = 10
@@ -36,7 +36,7 @@ class TestFragment : Fragment() {
         data.add(Feature(ID_CAMERA,"Camera", R.drawable.ic_camera))
         data.add(Feature(ID_MULTI_CAMERA,"Multi Camera", R.drawable.ic_camera))
         data.add(Feature(ID_FLASH,"Flash", R.drawable.ic_flash))
-        data.add(Feature(ID_HEADPHONE,"Headphone", R.drawable.ic_headphones))
+        data.add(Feature(ID_MICROPHONE,"Microphone", R.drawable.ic_microphone))
         data.add(Feature(ID_SOUND,"Sound",R.drawable.ic_sound))
         data.add(Feature(ID_ACCELEROMETER,"Accelerometer",R.drawable.ic_sensor))
         data.add(Feature(ID_GYROSCOPE,"Gyroscope",R.drawable.ic_sensor))

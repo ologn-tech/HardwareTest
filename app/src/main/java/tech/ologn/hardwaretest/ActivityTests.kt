@@ -21,7 +21,7 @@ class ActivityTests : AppCompatActivity() {
         when(intent.getIntExtra("id",-1)){
             TestFragment.ID_WIFI -> swipeFragment(WifiFragment())
             TestFragment.ID_Bluetooth -> swipeFragment(BluetoothFragment())
-            TestFragment.ID_HEADPHONE -> swipeFragment(HeadphoneFragment())
+            TestFragment.ID_MICROPHONE -> swipeFragment(MicrophoneFragment())
             TestFragment.ID_CAMERA -> swipeFragment(CameraFragment())
             TestFragment.ID_MULTI_CAMERA -> swipeFragment(MultiCameraFragment())
             TestFragment.ID_VIBRATION -> swipeFragment(VibrationFragment())

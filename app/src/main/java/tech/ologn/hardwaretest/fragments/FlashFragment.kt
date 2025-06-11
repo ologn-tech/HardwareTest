@@ -33,7 +33,7 @@ class FlashFragment : Fragment() {
                 flashOnAndConfirm()
         }
         binding.flashItem.btnSkip.setOnClickListener {
-            (requireActivity() as ActivityTests).swipeFragment(HeadphoneFragment())
+            (requireActivity() as ActivityTests).swipeFragment(MicrophoneFragment())
         }
         return binding.root
     }
@@ -71,7 +71,7 @@ class FlashFragment : Fragment() {
         flashOn()
         Handler().postDelayed(
             {alertFlashConfirm("Flash is working correctly"
-                ,"Flash isn't working correctly",requireActivity(),HeadphoneFragment()
+                ,"Flash isn't working correctly",requireActivity(),MicrophoneFragment()
                 , { flashOnAndConfirm() },"Are you able to see flash light ?")
             },1000
         )
