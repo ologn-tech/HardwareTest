@@ -1,6 +1,7 @@
 package tech.ologn.hardwaretest.fragments
 
-import android.content.Intent
+import android.content.Context
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -30,19 +31,43 @@ class SoundFragment : Fragment() {
         return binding.root
     }
 
-    private fun checkSound(){
-            val mp = MediaPlayer.create(requireActivity(),R.raw.mpsound)
-            mp.start()
-        Handler().postDelayed(
-            {(requireActivity() as ActivityTests).alertDialogConfirm("Sound works well",
-                "Sound doesn't work well"
-                ,requireActivity(),
-                AccelerometerFragment() , { checkSound() } ,"Do you hear the sound from the phone?", featureId = TestFragment.ID_SOUND)
-                mp.pause()
-            },
-            3000
+    private fun checkSound() {
+        val audioManager = requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.setStreamVolume(
+            AudioManager.STREAM_MUSIC,
+            audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+            0
         )
-    }
 
+        fun playChannel(leftVol: Float, rightVol: Float, onComplete: () -> Unit) {
+            val mp = MediaPlayer.create(requireActivity(), R.raw.mpsound)
+            mp.setVolume(leftVol, rightVol)
+            mp.setOnCompletionListener {
+                mp.release()
+                onComplete()
+            }
+            mp.start()
+        }
+
+        playChannel(1f, 0f) { // Left
+            Handler().postDelayed({
+                playChannel(0f, 1f) { // Right
+                    Handler().postDelayed({
+                        playChannel(1f, 1f) { // Both
+                            (requireActivity() as ActivityTests).alertDialogConfirm(
+                                "Sound works well",
+                                "Sound doesn't work well",
+                                requireActivity(),
+                                AccelerometerFragment(),
+                                { checkSound() },
+                                "Did you hear the sound from left, then right, then both speakers?",
+                                featureId = TestFragment.ID_SOUND
+                            )
+                        }
+                    }, 300)
+                }
+            }, 300)
+        }
+    }
 
 }
