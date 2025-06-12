@@ -3,8 +3,11 @@ package tech.ologn.hardwaretest
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.*
+import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -14,6 +17,9 @@ import tech.ologn.hardwaretest.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     private val checkReceiver = CheckReceiver()
+
+    private lateinit var nameTextView : TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -26,12 +32,15 @@ class MainActivity : AppCompatActivity() {
             intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED)
             registerReceiver(checkReceiver,intentFilter)
         }
+
+        nameTextView = binding.nameTV
+        nameTextView.text = TestResultStore.getTesterName(this)
         // to attach between fragments and viewPager
         // i created the TabLayoutAdapter to view the fragment in viewPager
         val adapter = TabLayoutAdapter(this)
         binding.viewPager.adapter = adapter
         // to attach between tabLayout and viewPager and display names of fragments
-        val tabLayoutMediator = TabLayoutMediator(binding.tabLayout,binding.viewPager){ tab, position ->
+        val tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){ tab, position ->
             when (position) {
                 0 -> tab.text = "Tests"
 //                1 -> tab.text = "Device Info"
@@ -40,6 +49,13 @@ class MainActivity : AppCompatActivity() {
         }
         // to start attaching
         tabLayoutMediator.attach()
+
+//        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+//                binding.welcomeLayout.visibility = if (position ==0) View.VISIBLE else View.GONE
+//            }
+//        })
 
         val toolbar = findViewById<Toolbar>(R.id.toolBar)
         setSupportActionBar(toolbar)
@@ -60,8 +76,35 @@ class MainActivity : AppCompatActivity() {
                 showClearConfirmDialog()
                 true
             }
+            R.id.action_edit ->{
+                showEditNameDialog()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun showEditNameDialog() {
+        val currentName = nameTextView.text
+
+        val editText = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_TEXT
+            setText(currentName)
+            setSelection(currentName.length)
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Edit Name")
+            .setView(editText)
+            .setPositiveButton("Save") { _, _ ->
+                val newName = editText.text.toString().trim()
+                if (newName.isNotEmpty()) {
+                    TestResultStore.saveTesterName(this, newName)
+                    nameTextView.text = newName
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun showClearConfirmDialog() {

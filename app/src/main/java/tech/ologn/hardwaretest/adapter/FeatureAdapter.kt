@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import tech.ologn.hardwaretest.ActivityTests
+import tech.ologn.hardwaretest.MainActivity
+import tech.ologn.hardwaretest.TestResultStore
 import tech.ologn.hardwaretest.databinding.FeatureItemBinding
 import tech.ologn.hardwaretest.model.Feature
 
@@ -24,6 +26,10 @@ class FeatureAdapter(private var activity: Activity, private var data:ArrayList<
         holder.binding.icon.setImageResource(data[position].icon)
         holder.binding.root.setCardBackgroundColor(getRandomColor(position))
         holder.binding.root.setOnClickListener{
+            if (TestResultStore.getTesterName(activity.applicationContext).isEmpty()) {
+                (activity as MainActivity).showEditNameDialog()
+                return@setOnClickListener
+            }
             val i = Intent(activity, ActivityTests::class.java)
             i.putExtra("id",data[position].id)
             activity.startActivity(i)
