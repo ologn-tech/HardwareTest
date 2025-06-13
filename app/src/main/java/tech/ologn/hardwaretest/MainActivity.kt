@@ -11,8 +11,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.material.tabs.TabLayoutMediator
 import tech.ologn.hardwaretest.databinding.ActivityMainBinding
+import tech.ologn.hardwaretest.fragments.TestFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
@@ -35,27 +35,10 @@ class MainActivity : AppCompatActivity() {
 
         nameTextView = binding.nameTV
         nameTextView.text = TestResultStore.getTesterName(this)
-        // to attach between fragments and viewPager
-        // i created the TabLayoutAdapter to view the fragment in viewPager
-        val adapter = TabLayoutAdapter(this)
-        binding.viewPager.adapter = adapter
-        // to attach between tabLayout and viewPager and display names of fragments
-        val tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){ tab, position ->
-            when (position) {
-                0 -> tab.text = "Tests"
-//                1 -> tab.text = "Device Info"
-                1 -> tab.text = "Result"
-            }
-        }
-        // to start attaching
-        tabLayoutMediator.attach()
 
-//        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-//            override fun onPageSelected(position: Int) {
-//                super.onPageSelected(position)
-//                binding.welcomeLayout.visibility = if (position ==0) View.VISIBLE else View.GONE
-//            }
-//        })
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.viewPager, TestFragment())
+            .commit()
 
         val toolbar = findViewById<Toolbar>(R.id.toolBar)
         setSupportActionBar(toolbar)

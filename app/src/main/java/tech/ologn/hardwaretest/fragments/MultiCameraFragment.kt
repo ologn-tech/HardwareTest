@@ -69,7 +69,7 @@ class MultiCameraFragment : Fragment() {
         binding.btnConfirm.setOnClickListener {
             (requireActivity() as ActivityTests).alertDialogConfirm("The camera works correctly"
                 ,"The camera doesn't work correctly",requireActivity(),FlashFragment()
-                , { checkAndOpenCamera() } ,"Is the camera image is good", TestFragment.ID_MULTI_CAMERA)
+                , { checkAndOpenCamera() } ,"Is the camera image good?", TestFragment.ID_MULTI_CAMERA)
         }
 
         return binding.root

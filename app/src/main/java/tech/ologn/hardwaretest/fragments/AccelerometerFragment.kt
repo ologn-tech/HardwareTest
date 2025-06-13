@@ -45,7 +45,7 @@ class AccelerometerFragment: Fragment(), SensorEventListener {
         binding.accelItem.btnClick.setOnClickListener{
             (requireActivity() as ActivityTests).alertDialogConfirm("The sensor works correctly"
                 ,"The sensor doesn't work correctly",requireActivity(),GyroScopeFragment()
-                , {  } ,"Is the sensor is good", TestFragment.ID_ACCELEROMETER)
+                , {  } ,"Is the sensor good?", TestFragment.ID_ACCELEROMETER)
         }
 
 

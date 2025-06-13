@@ -27,7 +27,7 @@ class LowBatteryFragment : Fragment() {
                     {
                         (requireActivity() as ActivityTests).alertDialogConfirm("The LEDs behave as expected"
                             ,"The LEDs don't work correctly",requireActivity(), CameraFragment()
-                            , {  } ,"Are the LEDs good", TestFragment.ID_LOWBATTERY)
+                            , {  } ,"Are the LEDs good?", TestFragment.ID_LOWBATTERY)
                         runShellCommand("dumpsys battery reset")
                     }, 3000
                 )

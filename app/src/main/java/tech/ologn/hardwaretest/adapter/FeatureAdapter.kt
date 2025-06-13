@@ -8,11 +8,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.MainActivity
+import tech.ologn.hardwaretest.R
 import tech.ologn.hardwaretest.TestResultStore
 import tech.ologn.hardwaretest.databinding.FeatureItemBinding
-import tech.ologn.hardwaretest.model.Feature
+import tech.ologn.hardwaretest.model.FeatureResult
 
-class FeatureAdapter(private var activity: Activity, private var data:ArrayList<Feature>):RecyclerView.Adapter<FeatureAdapter.MyViewHolder>() {
+class FeatureAdapter(
+    private var activity: Activity,
+    private var data:List<FeatureResult>
+): RecyclerView.Adapter<FeatureAdapter.MyViewHolder>() {
 
     class MyViewHolder(var binding:FeatureItemBinding):RecyclerView.ViewHolder(binding.root)
 
@@ -22,9 +26,16 @@ class FeatureAdapter(private var activity: Activity, private var data:ArrayList<
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.binding.txtName.text = data[position].name
-        holder.binding.icon.setImageResource(data[position].icon)
-        holder.binding.root.setCardBackgroundColor(getRandomColor(position))
+        holder.binding.name.text = data[position].name
+        holder.binding.icon.setImageResource(data[position].iconRes)
+        holder.binding.status.setImageResource(
+            if (data[position].message.contains("Passed")) R.drawable.ic_pass
+            else if (data[position].message.contains("Not tested")) R.drawable.ic_pending
+            else R.drawable.ic_failed
+        )
+        holder.binding.message.text = data[position].message
+        holder.binding.timestamp.text = data[position].timestamp
+
         holder.binding.root.setOnClickListener{
             if (TestResultStore.getTesterName(activity.applicationContext).isEmpty()) {
                 (activity as MainActivity).showEditNameDialog()
@@ -39,29 +50,5 @@ class FeatureAdapter(private var activity: Activity, private var data:ArrayList<
     override fun getItemCount(): Int {
        return data.size
     }
-
-
-    private fun getRandomColor(position: Int):Int{
-        when {
-            position %5 == 0 -> {
-                return Color.rgb(90,151,116)
-            }
-            position %5 == 1 -> {
-                return Color.rgb(90,94,151)
-            }
-            position %5 == 2 -> {
-                return Color.rgb(151,90,125)
-            }
-            position %5 == 3 -> {
-                return Color.rgb(151,147,90)
-            }
-            position %5 == 4 ->{
-                return Color.rgb(151,116,90)
-            }
-        }
-        return Color.rgb(0,0,0)
-    }
-
-
 
 }

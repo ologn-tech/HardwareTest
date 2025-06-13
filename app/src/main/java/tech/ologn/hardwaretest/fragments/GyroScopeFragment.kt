@@ -45,7 +45,7 @@ class GyroScopeFragment: Fragment(), SensorEventListener {
         binding.gyroItem.btnClick.setOnClickListener{
             (requireActivity() as ActivityTests).alertDialogConfirm("The sensor works correctly"
                 ,"The sensor doesn't work correctly",requireActivity(),LightFragment()
-                , {  } ,"Is the sensor is good", TestFragment.ID_GYROSCOPE)
+                , {  } ,"Is the sensor good?", TestFragment.ID_GYROSCOPE)
         }
 
         binding.gyroItem.btnSkip.setOnClickListener {

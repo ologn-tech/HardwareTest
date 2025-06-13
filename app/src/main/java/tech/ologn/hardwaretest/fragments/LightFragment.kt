@@ -45,7 +45,7 @@ class LightFragment: Fragment(), SensorEventListener {
         binding.lightItem.btnClick.setOnClickListener{
             (requireActivity() as ActivityTests).alertDialogConfirm("The sensor works correctly"
                 ,"The sensor doesn't work correctly",requireActivity(), null
-                , {  } ,"Is the sensor is good", TestFragment.ID_LIGHT)
+                , {  } ,"Is the sensor good?", TestFragment.ID_LIGHT)
         }
 
         binding.lightItem.btnSkip.setOnClickListener {

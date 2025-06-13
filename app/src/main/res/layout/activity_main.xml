@@ -41,15 +41,15 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorAccent"
-                android:contentDescription="navigation"
-                app:tabIndicatorColor="@color/white"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="#DBD6D6" />
+<!--            <com.google.android.material.tabs.TabLayout-->
+<!--                android:id="@+id/tabLayout"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="?attr/colorAccent"-->
+<!--                android:contentDescription="navigation"-->
+<!--                app:tabIndicatorColor="@color/white"-->
+<!--                app:tabSelectedTextColor="@color/white"-->
+<!--                app:tabTextColor="#DBD6D6" />-->
         </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="24sp"
-                android:text="Welcome " />
+                android:text="Tester " />
             <TextView
                 android:id="@+id/nameTV"
                 android:layout_width="wrap_content"
@@ -72,13 +72,19 @@
                 android:textStyle="bold"
                 android:textSize="22sp" />
         </LinearLayout>
-
-        <androidx.viewpager2.widget.ViewPager2
+        <FrameLayout
             android:id="@+id/viewPager"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
+
+<!--        <androidx.viewpager2.widget.ViewPager2-->
+<!--            android:id="@+id/viewPager"-->
+<!--            android:layout_marginRight="5dp"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

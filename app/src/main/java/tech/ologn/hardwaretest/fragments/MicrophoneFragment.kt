@@ -41,6 +41,7 @@ class MicrophoneFragment : Fragment() {
         binding.headItem.btnClick.setOnClickListener {
             if (checkPermission()) {
                 if (!isRecording) {
+                    binding.headItem.txtDescription.visibility = View.GONE
                     binding.resultLayout.visibility = View.GONE
                     startRecording()
                     binding.headItem.btnClick.text = "Stop Recording"
