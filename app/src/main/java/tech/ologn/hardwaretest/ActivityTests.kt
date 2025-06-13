@@ -24,7 +24,7 @@ class ActivityTests : AppCompatActivity() {
             TestFragment.ID_MICROPHONE -> swipeFragment(MicrophoneFragment())
             TestFragment.ID_CAMERA -> swipeFragment(CameraFragment())
             TestFragment.ID_MULTI_CAMERA -> swipeFragment(MultiCameraFragment())
-            TestFragment.ID_VIBRATION -> swipeFragment(VibrationFragment())
+            TestFragment.ID_LOWBATTERY -> swipeFragment(LowBatteryFragment())
             TestFragment.ID_CHARGING -> swipeFragment(ChargingFragment())
             TestFragment.ID_SOUND -> swipeFragment(SoundFragment())
             TestFragment.ID_FLASH -> swipeFragment(FlashFragment())
@@ -40,13 +40,17 @@ class ActivityTests : AppCompatActivity() {
             .commit()
     }
 
-    fun alertDialogPass(activity: Activity,fragment: Fragment,txtDesc:String, featureId: Int){
+    fun alertDialogPass(activity: Activity,fragment: Fragment? =null,txtDesc:String, featureId: Int){
         val dialogBinding = DialogPassBinding.inflate(layoutInflater)
         val dialog = Dialog(activity)
         dialog.setContentView(dialogBinding.root)
         dialog.window!!.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
         dialogBinding.txtDesc.text = txtDesc
         dialogBinding.btnNext.setOnClickListener {
+            if (fragment == null) {
+                activity.finish()
+                return@setOnClickListener
+            }
             swipeFragment(fragment)
             dialog.dismiss()
         }
@@ -58,18 +62,17 @@ class ActivityTests : AppCompatActivity() {
         dialog.show()
     }
 
-    fun alertDialogFail(activity: Activity , fragmentTo: Fragment ,function: () -> (Unit) ,txtDesc: String, featureId: Int){
+    fun alertDialogFail(activity: Activity , fragmentTo: Fragment? =null,function: () -> (Unit) ,txtDesc: String, featureId: Int){
         val dialogBinding = DialogFailBinding.inflate(layoutInflater)
         val dialog = Dialog(activity)
         dialog.setContentView(dialogBinding.root)
         dialog.window!!.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
         dialogBinding.txtDecription.text = txtDesc
         dialogBinding.btnNextTest.setOnClickListener {
-            TestResultStore.saveResult(
-                context = this,
-                featureId = featureId,
-                message = "Failed"
-            )
+            if (fragmentTo == null) {
+                activity.finish()
+                return@setOnClickListener
+            }
             swipeFragment(fragmentTo)
             dialog.dismiss()
         }
@@ -77,9 +80,14 @@ class ActivityTests : AppCompatActivity() {
             function()
             dialog.dismiss()
         }
+        TestResultStore.saveResult(
+            context = this,
+            featureId = featureId,
+            message = "Failed"
+        )
         dialog.show()
     }
-    fun alertDialogConfirm(questionPass:String ,questionFail: String, activity: Activity, fragmentTo: Fragment,function: () -> (Unit), textConfirm:String, featureId: Int){
+    fun alertDialogConfirm(questionPass:String ,questionFail: String, activity: Activity, fragmentTo: Fragment? =null,function: () -> (Unit), textConfirm:String, featureId: Int){
         val dialogConfirmBinding = DialogConfirmBinding.inflate(layoutInflater)
         val dialog = Dialog(activity)
         dialog.setContentView(dialogConfirmBinding.root)

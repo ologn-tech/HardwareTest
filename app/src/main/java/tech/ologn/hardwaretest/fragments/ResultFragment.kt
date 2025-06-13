@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import tech.ologn.hardwaretest.R
 import tech.ologn.hardwaretest.databinding.FragmentResultBinding
 import tech.ologn.hardwaretest.TestResultStore
@@ -16,11 +17,11 @@ import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_CAMERA
 import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_CHARGING
 import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_FLASH
 import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_GYROSCOPE
-import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_HEADPHONE
 import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_LIGHT
+import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_LOWBATTERY
+import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_MICROPHONE
 import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_MULTI_CAMERA
 import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_SOUND
-import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_VIBRATION
 import tech.ologn.hardwaretest.fragments.TestFragment.Companion.ID_WIFI
 import tech.ologn.hardwaretest.model.Feature
 import tech.ologn.hardwaretest.model.FeatureResult
@@ -32,11 +33,11 @@ class ResultFragment: Fragment() {
         Feature(ID_WIFI, "Wifi", R.drawable.ic_wifi),
         Feature(ID_Bluetooth, "Bluetooth", R.drawable.ic_bluetooth),
         Feature(ID_CHARGING, "Charging", R.drawable.ic_charge),
-        Feature(ID_VIBRATION, "Vibration", R.drawable.ic_vibration),
+        Feature(ID_LOWBATTERY, "Low Battery", R.drawable.ic_battery),
         Feature(ID_CAMERA, "Camera", R.drawable.ic_camera),
         Feature(ID_MULTI_CAMERA, "Multi Camera", R.drawable.ic_camera),
         Feature(ID_FLASH, "Flash", R.drawable.ic_flash),
-        Feature(ID_HEADPHONE, "Headphone", R.drawable.ic_headphones),
+        Feature(ID_MICROPHONE, "Microphone", R.drawable.ic_microphone),
         Feature(ID_SOUND, "Sound", R.drawable.ic_sound),
         Feature(ID_ACCELEROMETER, "Accelerometer", R.drawable.ic_sensor),
         Feature(ID_LIGHT, "Light", R.drawable.ic_light),
@@ -48,7 +49,7 @@ class ResultFragment: Fragment() {
     ): View {
         binding = FragmentResultBinding.inflate(inflater, container, false)
 
-        binding.rvResults.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rvResults.layoutManager = GridLayoutManager(requireContext(), 6)
         loadData()
 
         return binding.root
@@ -59,13 +60,15 @@ class ResultFragment: Fragment() {
         loadData()
     }
 
-    private fun loadData(){
-        val resultList : List<FeatureResult> = featureList.map {
+    private fun loadData() {
+        val resultList: List<FeatureResult> = featureList.map {
             val message = TestResultStore.getResult(requireContext(), it.id)
-            FeatureResult(it.id, it.name, it.icon, message!!)
+            val timestamp = TestResultStore.getTimestamp(requireContext(), it.id)
+
+            FeatureResult(it.id, it.name, it.icon, message!!, timestamp)
         }
 
-        binding.rvResults.adapter = ResultAdapter(resultList )
+        binding.rvResults.adapter = ResultAdapter(resultList)
     }
 
 }

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.VibrationFragment">
+    tools:context=".fragments.LowBatteryFragment">
 
-    <include layout="@layout/inside_test_item" android:id="@+id/vibItem"/>
+    <include layout="@layout/inside_test_item" android:id="@+id/lowBatteryItem"/>
 
 </FrameLayout>

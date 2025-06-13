@@ -16,7 +16,7 @@ class TestFragment : Fragment() {
         val ID_WIFI = 0
         val ID_Bluetooth = 1
         val ID_CHARGING = 2
-        val ID_VIBRATION = 3
+        val ID_LOWBATTERY = 3
         val ID_CAMERA = 4
         val ID_MULTI_CAMERA = 5
         val ID_FLASH = 6
@@ -32,7 +32,7 @@ class TestFragment : Fragment() {
         data.add(Feature(ID_WIFI,"Wifi", R.drawable.ic_wifi))
         data.add(Feature(ID_Bluetooth,"Bluetooth", R.drawable.ic_bluetooth))
         data.add(Feature(ID_CHARGING,"Charging",R.drawable.ic_charge))
-        data.add(Feature(ID_VIBRATION,"Vibration",R.drawable.ic_vibration))
+        data.add(Feature(ID_LOWBATTERY,"Low Battery",R.drawable.ic_battery))
         data.add(Feature(ID_CAMERA,"Camera", R.drawable.ic_camera))
         data.add(Feature(ID_MULTI_CAMERA,"Multi Camera", R.drawable.ic_camera))
         data.add(Feature(ID_FLASH,"Flash", R.drawable.ic_flash))
@@ -42,7 +42,7 @@ class TestFragment : Fragment() {
         data.add(Feature(ID_GYROSCOPE,"Gyroscope",R.drawable.ic_sensor))
         data.add(Feature(ID_LIGHT,"Light",R.drawable.ic_light))
 
-        binding.rvData.layoutManager = GridLayoutManager(requireContext(),3)
+        binding.rvData.layoutManager = GridLayoutManager(requireContext(),6)
 
         val featureAdapter = FeatureAdapter(requireActivity(),data)
         binding.rvData.adapter = featureAdapter

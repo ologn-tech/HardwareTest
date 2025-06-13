@@ -9,8 +9,8 @@
     <ImageView
         android:id="@+id/icon"
         android:background="@android:color/holo_green_light"
-        android:layout_width="48dp"
-        android:layout_height="48dp"/>
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
 
     <TextView
         android:id="@+id/name"
@@ -43,4 +43,18 @@
         android:autoSizeTextType="uniform"
         android:textSize="14sp"
         android:textAlignment="center"/>
+
+    <TextView
+        android:id="@+id/timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="none"
+        android:maxLines="1"
+        android:autoSizeMaxTextSize="14sp"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:textSize="14sp"
+        android:textAlignment="center"/>
+
 </LinearLayout>

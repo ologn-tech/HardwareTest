@@ -22,6 +22,7 @@ class ResultAdapter(private val results: List<FeatureResult>) :
                 else R.drawable.ic_failed
             )
             binding.message.text = result.message
+            binding.timestamp.text = "Time: ${result.timestamp}"
         }
     }
 

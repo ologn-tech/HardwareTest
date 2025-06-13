@@ -44,7 +44,7 @@ class LightFragment: Fragment(), SensorEventListener {
         binding.lightItem.btnClick.text = "Confirm"
         binding.lightItem.btnClick.setOnClickListener{
             (requireActivity() as ActivityTests).alertDialogConfirm("The sensor works correctly"
-                ,"The sensor doesn't work correctly",requireActivity(),WifiFragment()
+                ,"The sensor doesn't work correctly",requireActivity(), null
                 , {  } ,"Is the sensor is good", TestFragment.ID_LIGHT)
         }
 
@@ -58,7 +58,7 @@ class LightFragment: Fragment(), SensorEventListener {
         textLightValue = binding.textLightValue
 
         if (!isSupported())
-            (requireActivity() as ActivityTests).alertDialogFail(requireActivity(),WifiFragment(),
+            (requireActivity() as ActivityTests).alertDialogFail(requireActivity(), null,
                 {  },"Your device not Support this feature", featureId = TestFragment.ID_LIGHT)
 
         return binding.root

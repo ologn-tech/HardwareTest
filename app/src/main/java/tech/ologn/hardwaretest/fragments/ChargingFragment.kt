@@ -22,7 +22,7 @@ class ChargingFragment : Fragment() {
             checkCharging()
         }
         binding.charItem.btnSkip.setOnClickListener {
-            (requireActivity() as ActivityTests).swipeFragment(VibrationFragment())
+            (requireActivity() as ActivityTests).swipeFragment(LowBatteryFragment())
         }
 
         return binding.root
@@ -30,10 +30,10 @@ class ChargingFragment : Fragment() {
 
     private fun checkCharging(){
         if ( CheckReceiver.isConnectedCharger  && BATTERY_STATUS_CHARGING == 2){
-            (requireActivity() as ActivityTests).alertDialogPass(requireActivity(),VibrationFragment()
+            (requireActivity() as ActivityTests).alertDialogPass(requireActivity(),LowBatteryFragment()
                 ,"The Charging process works correctly", TestFragment.ID_CHARGING)
         }else{
-            (requireActivity() as ActivityTests).alertDialogFail(requireActivity(),VibrationFragment()
+            (requireActivity() as ActivityTests).alertDialogFail(requireActivity(),LowBatteryFragment()
             ,{checkCharging()},"Make sure the charger is connected",TestFragment.ID_CHARGING )
         }
     }
