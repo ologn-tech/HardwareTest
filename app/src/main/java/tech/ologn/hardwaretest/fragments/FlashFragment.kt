@@ -15,27 +15,38 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.DialogConfirmBinding
-
-import tech.ologn.hardwaretest.databinding.FragmentFlashBinding
 
 class FlashFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding = FragmentFlashBinding.inflate(inflater,container,false)
-        binding.flashItem.testIcon.setImageResource(R.drawable.ic_flash)
-        binding.flashItem.iconName.text = "Flash"
-        binding.flashItem.txtDescription.text = "Click the button below to turn on the flash"
-        binding.flashItem.btnClick.text = "Flash"
-        binding.flashItem.btnClick.setOnClickListener {
-                flashOnAndConfirm()
+        val root = inflater.inflate(R.layout.fragment_flash, container, false)
+
+        val flashItem: View = root.findViewById(R.id.flashItem)
+        val testIcon: ImageView = flashItem.findViewById(R.id.test_icon)
+        val iconName: TextView = flashItem.findViewById(R.id.iconName)
+        val txtDescription: TextView = flashItem.findViewById(R.id.txtDescription)
+        val btnClick: Button = flashItem.findViewById(R.id.btnClick)
+        val btnSkip: Button = flashItem.findViewById(R.id.btnSkip)
+
+        testIcon.setImageResource(R.drawable.ic_flash)
+        iconName.text = "Flash"
+        txtDescription.text = "Click the button below to turn on the flash"
+        btnClick.text = "Flash"
+
+        btnClick.setOnClickListener {
+            flashOnAndConfirm()
         }
-        binding.flashItem.btnSkip.setOnClickListener {
+
+        btnSkip.setOnClickListener {
             (requireActivity() as ActivityTests).swipeFragment(MicrophoneFragment())
         }
-        return binding.root
+
+        return root
     }
 
     private fun flashOn(){
@@ -77,22 +88,37 @@ class FlashFragment : Fragment() {
         )
     }
 
-    private fun alertFlashConfirm(questionPass:String, questionFail: String, activity: Activity, fragmentTo: Fragment, function: () -> (Unit), textConfirm:String){
-        val dialogConfirmBinding = DialogConfirmBinding.inflate(layoutInflater)
+    private fun alertFlashConfirm(
+        questionPass: String,
+        questionFail: String,
+        activity: Activity,
+        fragmentTo: Fragment,
+        function: () -> Unit,
+        textConfirm: String
+    ) {
         val dialog = Dialog(activity)
-        dialog.setContentView(dialogConfirmBinding.root)
-        dialog.window!!.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
-        dialogConfirmBinding.txtQuestion.text = textConfirm
-        dialogConfirmBinding.btnYes.setOnClickListener {
-            (requireActivity() as ActivityTests).alertDialogPass(activity,fragmentTo,questionPass, featureId = TestFragment.ID_FLASH)
+        val view = LayoutInflater.from(activity).inflate(R.layout.dialog_confirm, null)
+        dialog.setContentView(view)
+        dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+
+        val txtQuestion: TextView = view.findViewById(R.id.txtQuestion)
+        val btnYes: Button = view.findViewById(R.id.btnYes)
+        val btnNo: Button = view.findViewById(R.id.btnNo)
+
+        txtQuestion.text = textConfirm
+
+        btnYes.setOnClickListener {
+            (requireActivity() as ActivityTests).alertDialogPass(activity, fragmentTo, questionPass, featureId = TestFragment.ID_FLASH)
             flashOff()
             dialog.dismiss()
         }
-        dialogConfirmBinding.btnNo.setOnClickListener {
-            (requireActivity() as ActivityTests).alertDialogFail(activity,fragmentTo,function,questionFail, featureId = TestFragment.ID_FLASH)
+
+        btnNo.setOnClickListener {
+            (requireActivity() as ActivityTests).alertDialogFail(activity, fragmentTo, function, questionFail, featureId = TestFragment.ID_FLASH)
             flashOff()
             dialog.dismiss()
         }
+
         dialog.show()
     }
 }

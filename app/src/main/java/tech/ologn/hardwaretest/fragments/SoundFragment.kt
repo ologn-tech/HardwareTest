@@ -9,29 +9,47 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.FragmentSoundBinding
 
 class SoundFragment : Fragment() {
+    private lateinit var btnClick: Button
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding = FragmentSoundBinding.inflate(inflater,container,false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val root = inflater.inflate(R.layout.fragment_sound, container, false)
 
-        binding.sound.testIcon.setImageResource(R.drawable.ic_sound)
-        binding.sound.txtDescription.text = "Click on button to check sound"
-        binding.sound.iconName.text = "Sound"
-        binding.sound.btnClick.text = "Check Sound"
-        binding.sound.btnClick.setOnClickListener {
+        val soundItem = root.findViewById<View>(R.id.sound)
+        val testIcon: ImageView = soundItem.findViewById(R.id.test_icon)
+        val iconName: TextView = soundItem.findViewById(R.id.iconName)
+        val txtDescription: TextView = soundItem.findViewById(R.id.txtDescription)
+        btnClick = soundItem.findViewById(R.id.btnClick)
+        val btnSkip: Button = soundItem.findViewById(R.id.btnSkip)
+
+        testIcon.setImageResource(R.drawable.ic_sound)
+        txtDescription.text = "Click on button to check sound"
+        iconName.text = "Sound"
+        btnClick.text = "Check Sound"
+
+        btnClick.setOnClickListener {
             checkSound()
         }
-        binding.sound.btnSkip.setOnClickListener {
+
+        btnSkip.setOnClickListener {
             (requireActivity() as ActivityTests).swipeFragment(AccelerometerFragment())
         }
-        return binding.root
+
+        return root
     }
 
     private fun checkSound() {
+        btnClick.isEnabled = false
         val audioManager = requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.setStreamVolume(
             AudioManager.STREAM_MUSIC,
@@ -40,7 +58,8 @@ class SoundFragment : Fragment() {
         )
 
         fun playChannel(leftVol: Float, rightVol: Float, onComplete: () -> Unit) {
-            val mp = MediaPlayer.create(requireActivity(), R.raw.mpsound)
+            val act = activity ?: return
+            val mp = MediaPlayer.create(act, R.raw.mpsound)
             mp.setVolume(leftVol, rightVol)
             mp.setOnCompletionListener {
                 mp.release()
@@ -63,6 +82,7 @@ class SoundFragment : Fragment() {
                                 "Did you hear the sound from left, then right, then both speakers?",
                                 featureId = TestFragment.ID_SOUND
                             )
+                            btnClick.isEnabled = true
                         }
                     }, 300)
                 }

@@ -9,17 +9,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.FragmentGyroscopeBinding
 
 class GyroScopeFragment: Fragment(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var gyroscope: Sensor? = null
 
-    lateinit var binding : FragmentGyroscopeBinding
+    lateinit var root: View
 
     private lateinit var textX: TextView
     private lateinit var textY: TextView
@@ -36,33 +37,52 @@ class GyroScopeFragment: Fragment(), SensorEventListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentGyroscopeBinding.inflate(inflater,container,false)
+        root = inflater.inflate(R.layout.fragment_gyroscope, container, false)
 
-        binding.gyroItem.testIcon.setImageResource(R.drawable.ic_sensor)
-        binding.gyroItem.txtDescription.text = ""
-        binding.gyroItem.iconName.text = "Gyroscope"
-        binding.gyroItem.btnClick.text = "Confirm"
-        binding.gyroItem.btnClick.setOnClickListener{
-            (requireActivity() as ActivityTests).alertDialogConfirm("The sensor works correctly"
-                ,"The sensor doesn't work correctly",requireActivity(),LightFragment()
-                , {  } ,"Is the sensor good?", TestFragment.ID_GYROSCOPE)
+        val gyroItem: View = root.findViewById(R.id.gyroItem)
+        val testIcon: ImageView = gyroItem.findViewById(R.id.test_icon)
+        val txtDescription: TextView = gyroItem.findViewById(R.id.txtDescription)
+        val iconName: TextView = gyroItem.findViewById(R.id.iconName)
+        val btnClick: Button = gyroItem.findViewById(R.id.btnClick)
+        val btnSkip: Button = gyroItem.findViewById(R.id.btnSkip)
+
+        testIcon.setImageResource(R.drawable.ic_sensor)
+        txtDescription.text = ""
+        iconName.text = "Gyroscope"
+        btnClick.text = "Confirm"
+
+        btnClick.setOnClickListener {
+            (requireActivity() as ActivityTests).alertDialogConfirm(
+                "The sensor works correctly",
+                "The sensor doesn't work correctly",
+                requireActivity(),
+                LightFragment(),
+                { },
+                "Is the sensor good?",
+                TestFragment.ID_GYROSCOPE
+            )
         }
 
-        binding.gyroItem.btnSkip.setOnClickListener {
+        btnSkip.setOnClickListener {
             (requireActivity() as ActivityTests).swipeFragment(LightFragment())
         }
 
-        textX = binding.textX
-        textY = binding.textY
-        textZ = binding.textZ
+        textX = root.findViewById(R.id.textX)
+        textY = root.findViewById(R.id.textY)
+        textZ = root.findViewById(R.id.textZ)
 
-        if (!isSupported())
-            (requireActivity() as ActivityTests).alertDialogFail(requireActivity(),LightFragment(),
-                {  },"Your device not Support this feature", featureId = TestFragment.ID_GYROSCOPE)
+        if (!isSupported()) {
+            (requireActivity() as ActivityTests).alertDialogFail(
+                requireActivity(),
+                LightFragment(),
+                { },
+                "Your device not Support this feature",
+                featureId = TestFragment.ID_GYROSCOPE
+            )
+        }
 
-        return binding.root
+        return root
     }
-
 
     private fun isSupported(): Boolean{
         return gyroscope != null

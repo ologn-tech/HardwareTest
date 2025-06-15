@@ -78,7 +78,7 @@
         android:padding="5dp"
         android:text="Skip Test"
         android:textAllCaps="false"
-        android:textColor="@color/mainColor"
+        android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"

@@ -9,12 +9,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.FragmentMicrophoneBinding
 import tech.ologn.hardwaretest.views.WaveformView
 
 class MicrophoneFragment : Fragment() {
@@ -30,52 +32,64 @@ class MicrophoneFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentMicrophoneBinding.inflate(inflater, container, false)
-        binding.headItem.testIcon.setImageResource(R.drawable.ic_microphone)
-        binding.headItem.iconName.text= "Microphone"
-        binding.headItem.btnClick.text = "Record"
-        binding.headItem.txtDescription.text ="Please click record to check"
+        val root = inflater.inflate(R.layout.fragment_microphone, container, false)
+
+        val headItem = root.findViewById<View>(R.id.headItem)
+        val testIcon: ImageView = headItem.findViewById(R.id.test_icon)
+        val iconName: TextView = headItem.findViewById(R.id.iconName)
+        val btnClick: Button = headItem.findViewById(R.id.btnClick)
+        val txtDescription: TextView = headItem.findViewById(R.id.txtDescription)
+        val btnSkip: Button = headItem.findViewById(R.id.btnSkip)
+
+        val btnPlay: Button = root.findViewById(R.id.btnPlay)
+        val btnConfirm: Button = root.findViewById(R.id.btnConfirm)
+        val resultLayout: View = root.findViewById(R.id.resultLayout)
+
+        testIcon.setImageResource(R.drawable.ic_microphone)
+        iconName.text = "Microphone"
+        btnClick.text = "Record"
+        txtDescription.text = "Please click record to check"
 
         outputFile = "${requireContext().externalCacheDir?.absolutePath}/mic_test.3gp"
 
-        binding.headItem.btnClick.setOnClickListener {
+        btnClick.setOnClickListener {
             if (checkPermission()) {
                 if (!isRecording) {
-                    binding.headItem.txtDescription.visibility = View.GONE
-                    binding.resultLayout.visibility = View.GONE
+                    txtDescription.visibility = View.GONE
+                    resultLayout.visibility = View.GONE
                     startRecording()
-                    binding.headItem.btnClick.text = "Stop Recording"
+                    btnClick.text = "Stop Recording"
                 } else {
                     stopRecording()
-                    binding.resultLayout.visibility = View.VISIBLE
-                    binding.headItem.btnClick.text = "Record"
+                    resultLayout.visibility = View.VISIBLE
+                    btnClick.text = "Record"
                 }
             } else {
                 requestPermission()
             }
         }
 
-        binding.btnPlay.setOnClickListener {
+        btnPlay.setOnClickListener {
             playRecording()
         }
 
-        binding.btnConfirm.setOnClickListener {
+        btnConfirm.setOnClickListener {
             (requireActivity() as ActivityTests).alertDialogConfirm(
                 "Microphone works well",
                 "Microphone doesn't work well",
                 requireActivity(),
-                SoundFragment(), // or next test fragment
+                SoundFragment(),
                 { },
                 "Did you hear your recorded voice clearly?",
                 featureId = TestFragment.ID_MICROPHONE
             )
         }
 
-        binding.headItem.btnSkip.setOnClickListener {
+        btnSkip.setOnClickListener {
             (requireActivity() as ActivityTests).swipeFragment(SoundFragment())
         }
 
-        return binding.root
+        return root
     }
 
     private fun startRecording() {

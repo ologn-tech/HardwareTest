@@ -17,24 +17,25 @@ import android.hardware.camera2.params.SessionConfiguration
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.HandlerThread
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getMainExecutor
 import androidx.fragment.app.Fragment
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.FragmentMultiCameraBinding
 
 class MultiCameraFragment : Fragment() {
     private val REQ_CAMERA = 100
-    lateinit var binding :FragmentMultiCameraBinding
+    lateinit var root: View
 
     private val cameraManager by lazy {
         requireActivity().getSystemService(Context.CAMERA_SERVICE) as CameraManager
@@ -44,35 +45,59 @@ class MultiCameraFragment : Fragment() {
 
     private lateinit var textureView1: TextureView
     private lateinit var textureView2: TextureView
+    private lateinit var btnClick: Button
+    private lateinit var btnSkip: Button
+    private lateinit var btnConfirm: Button
 
     private var physicalCameraId1: String? = null
     private var physicalCameraId2: String? = null
 
     private val backgroundHandler: Handler? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentMultiCameraBinding.inflate(inflater,container,false)
-        binding.multiCamItem.testIcon.setImageResource(R.drawable.ic_camera)
-        binding.multiCamItem.iconName.text = "Multi Camera"
-        binding.multiCamItem.txtDescription.text = "Please click buttton to check your camera"
-        binding.multiCamItem.btnClick.text = "Check camera"
-        binding.multiCamItem.btnClick.setOnClickListener {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val root = inflater.inflate(R.layout.fragment_multi_camera, container, false)
+
+        val multiCamItem = root.findViewById<View>(R.id.multiCamItem)
+        val testIcon: ImageView = multiCamItem.findViewById(R.id.test_icon)
+        val iconName: TextView = multiCamItem.findViewById(R.id.iconName)
+        val txtDescription: TextView = multiCamItem.findViewById(R.id.txtDescription)
+        btnClick = multiCamItem.findViewById(R.id.btnClick)
+        btnSkip = multiCamItem.findViewById(R.id.btnSkip)
+
+        btnConfirm = root.findViewById(R.id.btnConfirm)
+        textureView1 = root.findViewById(R.id.textureView1)
+        textureView2 = root.findViewById(R.id.textureView2)
+
+        testIcon.setImageResource(R.drawable.ic_camera)
+        iconName.text = "Multi Camera"
+        txtDescription.text = "Please click buttton to check your camera"
+        btnClick.text = "Check camera"
+
+        btnClick.setOnClickListener {
             checkAndOpenCamera()
         }
-        binding.multiCamItem.btnSkip.setOnClickListener {
+
+        btnSkip.setOnClickListener {
             (requireActivity() as ActivityTests).swipeFragment(FlashFragment())
         }
 
-        textureView1 = binding.textureView1
-        textureView2 = binding.textureView2
-
-        binding.btnConfirm.setOnClickListener {
-            (requireActivity() as ActivityTests).alertDialogConfirm("The camera works correctly"
-                ,"The camera doesn't work correctly",requireActivity(),FlashFragment()
-                , { checkAndOpenCamera() } ,"Is the camera image good?", TestFragment.ID_MULTI_CAMERA)
+        btnConfirm.setOnClickListener {
+            (requireActivity() as ActivityTests).alertDialogConfirm(
+                "The camera works correctly",
+                "The camera doesn't work correctly",
+                requireActivity(),
+                FlashFragment(),
+                { checkAndOpenCamera() },
+                "Is the camera image good?",
+                TestFragment.ID_MULTI_CAMERA
+            )
         }
 
-        return binding.root
+        return root
     }
 
     private fun openCamera(
@@ -271,8 +296,8 @@ class MultiCameraFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.P)
     private fun checkMultiCameraEnabled() : Boolean{
-        binding.multiCamItem.btnClick.isEnabled = false
-        binding.multiCamItem.btnSkip.isEnabled = false
+        btnClick.isEnabled = false
+        btnSkip.isEnabled = false
         val cameraList = cameraManager.cameraIdList
         if (cameraList.size<2)
             return false
@@ -302,18 +327,18 @@ class MultiCameraFragment : Fragment() {
                 startCameraPreview(multiCamera.toString(), enabledRun = true) {
                         status, _ ->
                     if (status){
-                        binding.btnConfirm.visibility = View.VISIBLE
+                        btnConfirm.visibility = View.VISIBLE
                     }
                         }
             else{
                 Handler().postDelayed(
-                    {(requireActivity() as ActivityTests).alertDialogFail(requireActivity(),MultiCameraFragment(),
-                        {binding.multiCamItem.btnClick.isEnabled = true },"Your device not Support this feature", featureId = TestFragment.ID_MULTI_CAMERA)
+                    {(requireActivity() as ActivityTests).alertDialogFail(requireActivity(), FlashFragment(),
+                        {btnClick.isEnabled = true },"Your device not Support this feature", featureId = TestFragment.ID_MULTI_CAMERA)
                     }
                     , 500
                 )
             }
-            binding.multiCamItem.btnSkip.isEnabled = true
+            btnSkip.isEnabled = true
         },5000)
         return true
     }

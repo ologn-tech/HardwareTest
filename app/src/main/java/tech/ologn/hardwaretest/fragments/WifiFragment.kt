@@ -1,33 +1,49 @@
 package tech.ologn.hardwaretest.fragments
 
-
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.FragmentWifiBinding
 
 class WifiFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding = FragmentWifiBinding.inflate(inflater,container,false)
-        binding.item.testIcon.setImageResource(R.drawable.ic_wifi)
-        binding.item.iconName.text = "Wifi"
-        binding.item.txtDescription.text = "Wifi Connection test is automatically run."
-        binding.item.btnClick.text = "Check Wifi Connection"
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val root = inflater.inflate(R.layout.fragment_wifi, container, false)
+
+        val testIcon: ImageView = root.findViewById(R.id.test_icon)
+        val iconName: TextView = root.findViewById(R.id.iconName)
+        val txtDescription: TextView = root.findViewById(R.id.txtDescription)
+        val btnClick: Button = root.findViewById(R.id.btnClick)
+        val btnSkip: Button = root.findViewById(R.id.btnSkip)
+
+        testIcon.setImageResource(R.drawable.ic_wifi)
+        iconName.text = "Wifi"
+        txtDescription.text = "Wifi Connection test is automatically run."
+        btnClick.text = "Check Wifi Connection"
+
         checkAndAlert()
-        binding.item.btnClick.setOnClickListener {
+
+        btnClick.setOnClickListener {
             checkAndAlert()
         }
-        binding.item.btnSkip.setOnClickListener {
+
+        btnSkip.setOnClickListener {
             (requireActivity() as ActivityTests).swipeFragment(BluetoothFragment())
         }
-        return binding.root
+
+        return root
     }
 
 

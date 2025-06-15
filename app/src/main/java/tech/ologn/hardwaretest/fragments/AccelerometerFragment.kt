@@ -9,17 +9,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.FragmentAccelerometerBinding
 
 class AccelerometerFragment: Fragment(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var accelerometer: Sensor? = null
-
-    lateinit var binding : FragmentAccelerometerBinding
 
     private lateinit var textX: TextView
     private lateinit var textY: TextView
@@ -36,32 +35,50 @@ class AccelerometerFragment: Fragment(), SensorEventListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAccelerometerBinding.inflate(inflater,container,false)
+        val root = inflater.inflate(R.layout.fragment_accelerometer, container, false)
 
-        binding.accelItem.testIcon.setImageResource(R.drawable.ic_sensor)
-        binding.accelItem.txtDescription.text = ""
-        binding.accelItem.iconName.text = "Accelerometer"
-        binding.accelItem.btnClick.text = "Confirm"
-        binding.accelItem.btnClick.setOnClickListener{
-            (requireActivity() as ActivityTests).alertDialogConfirm("The sensor works correctly"
-                ,"The sensor doesn't work correctly",requireActivity(),GyroScopeFragment()
-                , {  } ,"Is the sensor good?", TestFragment.ID_ACCELEROMETER)
+        val testIcon: ImageView = root.findViewById(R.id.test_icon)
+        val txtDescription: TextView = root.findViewById(R.id.txtDescription)
+        val iconName: TextView = root.findViewById(R.id.iconName)
+        val btnClick: Button = root.findViewById(R.id.btnClick)
+        val btnSkip: Button = root.findViewById(R.id.btnSkip)
+
+        textX = root.findViewById(R.id.textX)
+        textY = root.findViewById(R.id.textY)
+        textZ = root.findViewById(R.id.textZ)
+
+        testIcon.setImageResource(R.drawable.ic_sensor)
+        txtDescription.text = ""
+        iconName.text = "Accelerometer"
+        btnClick.text = "Confirm"
+
+        btnClick.setOnClickListener {
+            (requireActivity() as ActivityTests).alertDialogConfirm(
+                "The sensor works correctly",
+                "The sensor doesn't work correctly",
+                requireActivity(),
+                GyroScopeFragment(),
+                {},
+                "Is the sensor good?",
+                TestFragment.ID_ACCELEROMETER
+            )
         }
 
-
-        binding.accelItem.btnSkip.setOnClickListener {
+        btnSkip.setOnClickListener {
             (requireActivity() as ActivityTests).swipeFragment(GyroScopeFragment())
         }
 
-        textX = binding.textX
-        textY = binding.textY
-        textZ = binding.textZ
+        if (!isSupported()) {
+            (requireActivity() as ActivityTests).alertDialogFail(
+                requireActivity(),
+                GyroScopeFragment(),
+                {},
+                "Your device not Support this feature",
+                featureId = TestFragment.ID_ACCELEROMETER
+            )
+        }
 
-        if (!isSupported())
-            (requireActivity() as ActivityTests).alertDialogFail(requireActivity(),GyroScopeFragment(),
-                {  },"Your device not Support this feature", featureId = TestFragment.ID_ACCELEROMETER)
-
-        return binding.root
+        return root
     }
 
 

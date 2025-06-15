@@ -6,16 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import tech.ologn.hardwaretest.R
 import tech.ologn.hardwaretest.TestResultStore
 import tech.ologn.hardwaretest.adapter.FeatureAdapter
-import tech.ologn.hardwaretest.databinding.FragmentTestBinding
 import tech.ologn.hardwaretest.model.Feature
 import tech.ologn.hardwaretest.model.FeatureResult
 
 class TestFragment : Fragment() {
 
-    lateinit var binding: FragmentTestBinding
+    lateinit var root: View
 
     companion object{
         val ID_WIFI = 0
@@ -47,13 +47,19 @@ class TestFragment : Fragment() {
         Feature(ID_GYROSCOPE, "Gyroscope", R.drawable.ic_sensor),
     )
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentTestBinding.inflate(inflater,container,false)
-        binding.rvData.layoutManager = GridLayoutManager(requireContext(),6)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        root = inflater.inflate(R.layout.fragment_test, container, false)
+
+        val rvData: RecyclerView = root.findViewById(R.id.rvData)
+        rvData.layoutManager = GridLayoutManager(requireContext(), 6)
 
         loadData()
 
-        return binding.root
+        return root
     }
 
     override fun onResume() {
@@ -69,6 +75,6 @@ class TestFragment : Fragment() {
             FeatureResult(it.id, it.name, it.icon, message!!, timestamp)
         }
 
-        binding.rvData.adapter = FeatureAdapter(requireActivity(), resultList)
+        root.findViewById<RecyclerView>(R.id.rvData).adapter = FeatureAdapter(requireActivity(), resultList)
     }
 }

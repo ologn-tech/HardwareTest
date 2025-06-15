@@ -11,19 +11,17 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import tech.ologn.hardwaretest.databinding.ActivityMainBinding
 import tech.ologn.hardwaretest.fragments.TestFragment
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityMainBinding
     private val checkReceiver = CheckReceiver()
 
     private lateinit var nameTextView : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
+
         // register the actions
         if (Build.VERSION.SDK_INT >= 26){
             val intentFilter = IntentFilter()
@@ -33,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             registerReceiver(checkReceiver,intentFilter)
         }
 
-        nameTextView = binding.nameTV
+        nameTextView = findViewById(R.id.nameTV)
         nameTextView.text = TestResultStore.getTesterName(this)
 
         supportFragmentManager.beginTransaction()
@@ -43,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolBar)
         setSupportActionBar(toolbar)
     }
+
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(checkReceiver)

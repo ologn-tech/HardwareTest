@@ -10,23 +10,25 @@ import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CaptureRequest
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getMainExecutor
 import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.FragmentCameraBinding
 
 class CameraFragment : Fragment() {
     private val REQ_CAMERA = 100
-    lateinit var binding :FragmentCameraBinding
+    lateinit var root :View
 
     private val cameraManager by lazy {
         requireActivity().getSystemService(Context.CAMERA_SERVICE) as CameraManager
@@ -40,23 +42,35 @@ class CameraFragment : Fragment() {
     private var cameraNumbers = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentCameraBinding.inflate(inflater,container,false)
-        binding.camItem.testIcon.setImageResource(R.drawable.ic_camera)
-        binding.camItem.iconName.text = "Camera"
-        binding.camItem.txtDescription.text = ""
-        binding.camItem.btnClick.text = "Check camera"
-        binding.camItem.btnClick.setOnClickListener {
-            binding.fabSwitchCamera.visibility = View.VISIBLE
+        root = inflater.inflate(R.layout.fragment_camera, container,false)
+        val camItem: View = root.findViewById(R.id.camItem)
+        val testIcon: ImageView = camItem.findViewById(R.id.test_icon)
+        val iconName: TextView = camItem.findViewById(R.id.iconName)
+        val txtDescription: TextView = camItem.findViewById(R.id.txtDescription)
+        val btnClick: Button = camItem.findViewById(R.id.btnClick)
+        val btnSkip: Button = camItem.findViewById(R.id.btnSkip)
+
+        val fabSwitchCamera: View = root.findViewById(R.id.fabSwitchCamera)
+        val btnConfirm: Button = root.findViewById(R.id.btnConfirm)
+        textureView = root.findViewById(R.id.textureView)
+
+        testIcon.setImageResource(R.drawable.ic_camera)
+        iconName.text = "Camera"
+        txtDescription.text = ""
+        btnClick.text = "Check camera"
+
+        btnClick.setOnClickListener {
             checkAndOpenCamera()
         }
-        binding.camItem.btnSkip.setOnClickListener {
+
+        btnSkip.setOnClickListener {
             (requireActivity() as ActivityTests).swipeFragment(MultiCameraFragment())
         }
-        textureView = binding.textureView
+        textureView = root.findViewById(R.id.textureView)
 
         cameraNumbers = cameraManager.cameraIdList.size
 
-        binding.fabSwitchCamera.setOnClickListener{
+        fabSwitchCamera.setOnClickListener{
             if (cameraNumbers > 1)
             {
                 physicalCamera++
@@ -67,13 +81,13 @@ class CameraFragment : Fragment() {
             }
         }
 
-        binding.btnConfirm.setOnClickListener {
+        btnConfirm.setOnClickListener {
             (requireActivity() as ActivityTests).alertDialogConfirm("The camera works correctly"
                 ,"The camera doesn't work correctly",requireActivity(), MultiCameraFragment()
                 , { checkAndOpenCamera() } ,"Is the camera image good?", TestFragment.ID_CAMERA)
         }
 
-        return binding.root
+        return root
     }
 
     private fun checkAndOpenCamera(){
@@ -137,7 +151,8 @@ class CameraFragment : Fragment() {
                         cameraDevice = camera
                         try {
                             camera.createCaptureSession(listOf(surface1), captureStateCallback, null)
-                            binding.btnConfirm.visibility = View.VISIBLE
+                            root.findViewById<Button>(R.id.btnConfirm).visibility = View.VISIBLE
+                            root.findViewById<FloatingActionButton>(R.id.fabSwitchCamera).visibility = if (cameraNumbers > 1) View.VISIBLE else View.GONE
                         } catch (e: Exception) {
                             showFailDialog()
                             throw RuntimeException(e)

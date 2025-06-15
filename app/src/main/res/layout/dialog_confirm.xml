@@ -66,7 +66,7 @@
         android:background="@drawable/button_shape_trans"
         android:text="No"
         android:textAllCaps="false"
-        android:textColor="@color/mainColor"
+        android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"

@@ -6,26 +6,38 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.CheckReceiver
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.FragmentChargingBinding
 
 class ChargingFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding = FragmentChargingBinding.inflate(inflater,container,false)
-        binding.charItem.testIcon.setImageResource(R.drawable.ic_charge)
-        binding.charItem.iconName.text = "Charging"
-        binding.charItem.txtDescription.text = "Connect the charger to check"
-        binding.charItem.btnClick.text = "Check Charging"
-        binding.charItem.btnClick.setOnClickListener {
+        val root = inflater.inflate(R.layout.fragment_charging, container, false)
+
+        val charItem: View = root.findViewById(R.id.charItem)
+        val testIcon: ImageView = charItem.findViewById(R.id.test_icon)
+        val iconName: TextView = charItem.findViewById(R.id.iconName)
+        val txtDescription: TextView = charItem.findViewById(R.id.txtDescription)
+        val btnClick: Button = charItem.findViewById(R.id.btnClick)
+        val btnSkip: Button = charItem.findViewById(R.id.btnSkip)
+
+        testIcon.setImageResource(R.drawable.ic_charge)
+        iconName.text = "Charging"
+        txtDescription.text = "Connect the charger to check"
+        btnClick.text = "Check Charging"
+
+        btnClick.setOnClickListener {
             checkCharging()
         }
-        binding.charItem.btnSkip.setOnClickListener {
+
+        btnSkip.setOnClickListener {
             (requireActivity() as ActivityTests).swipeFragment(LowBatteryFragment())
         }
 
-        return binding.root
+        return root
     }
 
     private fun checkCharging(){

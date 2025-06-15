@@ -10,18 +10,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import tech.ologn.hardwaretest.ActivityTests
 import tech.ologn.hardwaretest.MainActivity
 import tech.ologn.hardwaretest.R
-import tech.ologn.hardwaretest.databinding.FragmentLightBinding
 
 class LightFragment: Fragment(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var lightSensor: Sensor? = null
 
-    lateinit var binding : FragmentLightBinding
+    lateinit var root : View
 
     private lateinit var textLightValue: TextView
 
@@ -36,34 +37,52 @@ class LightFragment: Fragment(), SensorEventListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLightBinding.inflate(inflater,container,false)
+        val root = inflater.inflate(R.layout.fragment_light, container, false)
 
-        binding.lightItem.testIcon.setImageResource(R.drawable.ic_sensor)
-        binding.lightItem.txtDescription.text = ""
-        binding.lightItem.iconName.text = "Light"
-        binding.lightItem.btnClick.text = "Confirm"
-        binding.lightItem.btnClick.setOnClickListener{
-            (requireActivity() as ActivityTests).alertDialogConfirm("The sensor works correctly"
-                ,"The sensor doesn't work correctly",requireActivity(), null
-                , {  } ,"Is the sensor good?", TestFragment.ID_LIGHT)
+        val lightItem: View = root.findViewById(R.id.lightItem)
+        val testIcon: ImageView = lightItem.findViewById(R.id.test_icon)
+        val txtDescription: TextView = lightItem.findViewById(R.id.txtDescription)
+        val iconName: TextView = lightItem.findViewById(R.id.iconName)
+        val btnClick: Button = lightItem.findViewById(R.id.btnClick)
+        val btnSkip: Button = lightItem.findViewById(R.id.btnSkip)
+
+        testIcon.setImageResource(R.drawable.ic_sensor)
+        txtDescription.text = ""
+        iconName.text = "Light"
+        btnClick.text = "Confirm"
+
+        btnClick.setOnClickListener {
+            (requireActivity() as ActivityTests).alertDialogConfirm(
+                "The sensor works correctly",
+                "The sensor doesn't work correctly",
+                requireActivity(),
+                null,
+                { },
+                "Is the sensor good?",
+                TestFragment.ID_LIGHT
+            )
         }
 
-        binding.lightItem.btnSkip.setOnClickListener {
-            // Restart activity
+        btnSkip.setOnClickListener {
             val intent = Intent(requireContext(), MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
 
-        textLightValue = binding.textLightValue
+        textLightValue = root.findViewById(R.id.textLightValue)
 
-        if (!isSupported())
-            (requireActivity() as ActivityTests).alertDialogFail(requireActivity(), null,
-                {  },"Your device not Support this feature", featureId = TestFragment.ID_LIGHT)
+        if (!isSupported()) {
+            (requireActivity() as ActivityTests).alertDialogFail(
+                requireActivity(),
+                null,
+                { },
+                "Your device not Support this feature",
+                featureId = TestFragment.ID_LIGHT
+            )
+        }
 
-        return binding.root
+        return root
     }
-
 
     private fun isSupported(): Boolean{
         return lightSensor != null
